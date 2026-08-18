@@ -3,106 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReadBuddy — AI Reading Companion for Kids</title>
+  <title>ReadBuddy — Your AI Reading Tutor</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="app">
-    <!-- Header -->
-    <header class="header">
-      <h1>📚 ReadBuddy</h1>
-      <p class="tagline">Your AI reading buddy — listen, read, and learn! 🎉</p>
-      <div class="level-badge" id="levelBadge">Level 1: Letters</div>
-    </header>
-
-    <!-- Kid Setup -->
-    <section class="setup-section" id="setupSection">
-      <h2>👋 Hi there! What's your name?</h2>
-      <input type="text" id="kidName" placeholder="Type your name here!" maxlength="20" />
-      <button id="startBtn" class="btn-big btn-start">Let's Start Reading! 🚀</button>
-    </section>
-
-    <!-- Main Reading App (hidden until setup) -->
-    <div class="reading-app" id="readingApp" style="display:none;">
-
-      <!-- Level Selector -->
-      <section class="level-selector">
-        <button class="btn-level active" data-level="letters">🔤 Letters</button>
-        <button class="btn-level" data-level="words">📖 Words</button>
-        <button class="btn-level" data-level="sentences">📝 Sentences</button>
-        <button class="btn-level" data-level="stories">⭐ Stories</button>
-      </section>
-
-      <!-- Score Board -->
-      <section class="scoreboard">
-        <div class="score-item">
-          <span class="score-emoji">🌟</span>
-          <span class="score-value" id="starsCount">0</span>
-          <span class="score-label">Stars</span>
+    <!-- AI Avatar -->
+    <div class="avatar-area">
+      <div class="avatar" id="avatar">
+        <div class="avatar-face" id="avatarFace">
+          <div class="avatar-eyes">
+            <div class="eye" id="leftEye"></div>
+            <div class="eye" id="rightEye"></div>
+          </div>
+          <div class="avatar-mouth" id="avatarMouth"></div>
         </div>
-        <div class="score-item">
-          <span class="score-emoji">✅</span>
-          <span class="score-value" id="correctCount">0</span>
-          <span class="score-label">Correct</span>
-        </div>
-        <div class="score-item">
-          <span class="score-emoji">🔥</span>
-          <span class="score-value" id="streakCount">0</span>
-          <span class="score-label">Streak</span>
-        </div>
-      </section>
-
-      <!-- Reading Card -->
-      <section class="reading-card" id="readingCard">
-        <div class="card-prompt" id="cardPrompt">
-          <p class="instruction" id="instruction">👇 Click the button to hear the word, then read it out loud!</p>
-        </div>
-
-        <div class="word-display" id="wordDisplay">
-          <span class="big-word">A</span>
-        </div>
-
-        <div class="word-image" id="wordImage"></div>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-          <button id="speakBtn" class="btn-big btn-speak" title="Read it to me">
-            🔊 Read to Me
-          </button>
-          <button id="listenBtn" class="btn-big btn-listen" title="I'll read it!">
-            🎤 I'll Read It!
-          </button>
-          <button id="nextBtn" class="btn-big btn-next" title="Next word">
-            ➡️ Next
-          </button>
-        </div>
-
-        <!-- Listening Indicator -->
-        <div class="listening-indicator" id="listeningIndicator" style="display:none;">
-          <div class="pulse-ring"></div>
-          <p>👂 I'm listening... Read it out loud!</p>
-        </div>
-
-        <!-- Feedback -->
-        <div class="feedback" id="feedback"></div>
-      </section>
-
-      <!-- Progress -->
-      <section class="progress-section">
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-        <p class="progress-text" id="progressText">0 words completed</p>
-      </section>
-
-      <!-- Encouragement -->
-      <div class="encouragement" id="encouragement"></div>
+      </div>
+      <div class="avatar-status" id="avatarStatus">Starting up...</div>
     </div>
 
-    <footer class="footer">
-      <p>Made with 💙 for kids learning to read — <a href="https://github.com/luelzelalem848-max" target="_blank">View on GitHub</a></p>
-    </footer>
+    <!-- Speech Bubble -->
+    <div class="speech-bubble" id="speechBubble">
+      <p id="speechText">Loading...</p>
+    </div>
+
+    <!-- Main Display -->
+    <div class="main-display" id="mainDisplay">
+      <!-- Big letter/word shows here -->
+      <div class="big-display" id="bigDisplay"></div>
+      <!-- Emoji image -->
+      <div class="emoji-display" id="emojiDisplay"></div>
+    </div>
+
+    <!-- Listening Indicator -->
+    <div class="listening-zone" id="listeningZone">
+      <div class="mic-ripple">
+        <div class="ripple-circle"></div>
+        <div class="ripple-circle delay1"></div>
+        <div class="ripple-circle delay2"></div>
+        <div class="mic-icon">🎤</div>
+      </div>
+      <p class="listening-text" id="listeningText">I'm listening...</p>
+    </div>
+
+    <!-- Score Bar -->
+    <div class="score-bar" id="scoreBar" style="display:none;">
+      <div class="score-chip">⭐ <span id="starsCount">0</span></div>
+      <div class="score-chip">✅ <span id="correctCount">0</span></div>
+      <div class="score-chip">🔥 <span id="streakCount">0</span></div>
+    </div>
+
+    <!-- Progress Dots -->
+    <div class="progress-dots" id="progressDots" style="display:none;"></div>
+
+    <!-- Feedback -->
+    <div class="feedback-zone" id="feedbackZone"></div>
+
+    <!-- Controls -->
+    <div class="controls" id="controls" style="display:none;">
+      <button id="repeatBtn" class="btn-control">🔊 Repeat</button>
+      <button id="skipBtn" class="btn-control">⏭️ Skip</button>
+      <button id="homeBtn" class="btn-control">🏠 Home</button>
+    </div>
+
+    <!-- Level Info -->
+    <div class="level-info" id="levelInfo" style="display:none;">
+      <span id="levelLabel">Level 1: Letters</span>
+    </div>
   </div>
 
   <script src="app.js"></script>
