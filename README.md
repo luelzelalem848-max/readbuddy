@@ -1,94 +1,78 @@
-# 📚 ReadBuddy — AI Reading Companion for Kids
+# 📚 ReadBuddy — AI Reading Tutor for Kids
 
-An interactive, AI-powered reading assistant that helps kids who can't read learn to read. Uses the browser's built-in **Speech Recognition** and **Text-to-Speech** APIs to listen to kids read, give them real-time feedback, and read words/sentences aloud — all with a fun, colorful, kid-friendly interface.
+An interactive, AI-powered reading companion that **talks to kids, listens to them read, and gives real-time feedback** — all automatically. The app starts the moment you open it, asks the kid's name by listening, then teaches letters, words, and sentences one by one.
 
-## ✨ Features
+**Now a PWA — installable on Android phones!**
 
-### 🔤 Four Reading Levels
-- **Letters** — Learn A-Z with pictures and sounds (🍎 A is for Apple)
-- **Words** — Simple 3-6 letter words with emoji hints (🐱 cat, ☀️ sun)
-- **Sentences** — Short, easy sentences with word-by-word highlighting
-- **Stories** — Mini stories with multiple sentences
+## ✨ What Makes It Different
 
-### 🎤 AI Speech Recognition
-- Kid clicks "I'll Read It!" and reads the word/sentence out loud
-- The app **listens in real-time** and checks if they read it correctly
-- Gives instant feedback — praise for correct, gentle retry for incorrect
-- Works with natural speech (doesn't need to be perfect!)
+### 🤖 Fully Automatic AI Flow
+- **Page loads → AI speaks immediately** — no buttons to click
+- Asks the kid's name by **listening** with speech recognition
+- Saves the name — welcomes returning kids by name
+- Teaches each letter: speaks it, shows it, then **immediately starts listening**
+- If no speech detected → **repeats the letter and listens again**
+- If incorrect → **tells the kid what they said, corrects them, and listens again**
+- After 3 wrong tries → moves to next letter automatically
+- All 3 levels auto-progress: Letters → Words → Sentences
 
-### 🔊 Text-to-Speech
-- Click "Read to Me" and the app reads the word/sentence aloud
-- Kid-friendly voice (slower rate, higher pitch)
-- Word-by-word highlighting for sentences and stories
-- Click any individual word to hear just that word
+### 🎤 Long Listening Time
+- Listens for up to **20 seconds** per attempt (was 8 before)
+- 10 alternative transcripts checked for better accuracy
+- Fuzzy matching with Levenshtein distance — catches mispronunciations
+- Phonetic matching for letters (e.g., "ay" = A, "bee" = B)
 
-### 🎉 Gamification
-- ⭐ Stars for every correct read
-- ✅ Correct answer counter
-- 🔥 Streak tracker (consecutive correct reads)
-- 📊 Progress bar showing how far through the level
-- 🎊 Confetti animation on correct answers
-- 💬 Random encouraging messages
+### 🔊 Natural Voice
+- Prioritizes the most natural-sounding browser voices (Google UK English Female, Samantha, Microsoft Aria)
+- Sentences are split and spoken with natural pauses between them
+- Moderate rate (0.9) and friendly pitch (1.15) — not robotic
+- Uses the kid's name throughout — "Great job, Luel!" "Your turn, Luel!"
 
-### 🎨 Kid-Friendly Design
-- Big, colorful buttons
-- Fun fonts (Fredoka & Comic Neue)
-- Emoji pictures for every letter and word
-- Smooth animations and visual feedback
-- Fully responsive — works on tablets and phones
+### 💬 More Interaction
+- AI remembers the kid's name and uses it constantly
+- Every 5 items, AI gives mid-lesson encouragement ("You're doing great!")
+- On incorrect answers, AI tells the kid what they said vs what's correct
+- Streak tracking with special messages ("That's 3 in a row!")
+- Level-up celebrations with personalized messages
+- Completion celebration with confetti
 
-## How It Works
-
-1. Kid enters their name
-2. Pick a level (Letters, Words, Sentences, or Stories)
-3. Click **🔊 Read to Me** to hear the word/sentence
-4. Click **🎤 I'll Read It!** and read it out loud
-5. The app listens and tells them if they got it right!
-6. Stars and confetti for correct reads 🎉
-7. Click **➡️ Next** to move to the next word
+### 📲 Installable on Android (PWA)
+- Works as a Progressive Web App
+- On Android Chrome: tap "Install" to add to home screen
+- Works offline after first visit (service worker caches everything)
+- Full-screen experience — looks like a real app
 
 ## Tech Stack
-- **HTML5, CSS3, Vanilla JavaScript** — no frameworks, no dependencies
-- **Web Speech API** — browser-native speech recognition & synthesis
-- **No backend needed** — runs entirely in the browser
-- **No data collection** — everything stays on the device
+- HTML5, CSS3, Vanilla JavaScript (no frameworks)
+- **Web Speech API** — speech recognition & synthesis
+- **PWA** — manifest.json + service worker for installability
+- No backend, no API keys, no data collection
 
 ## Browser Support
-- ✅ **Chrome** (recommended — best speech recognition)
+- ✅ **Chrome** (best — full speech recognition + TTS)
 - ✅ **Edge** (full support)
-- ⚠️ **Safari** (text-to-speech works, speech recognition limited)
-- ❌ **Firefox** (text-to-speech works, no speech recognition)
+- ⚠️ Safari (limited speech recognition)
+- ❌ Firefox (TTS only)
 
 ## How to Run
-1. Clone the repo
-2. Open `index.html` in Chrome or Edge
-3. Allow microphone access when prompted
-4. Start reading!
+1. Open `index.html` in Chrome
+2. Allow microphone access
+3. The app starts automatically!
+
+## Install on Android
+1. Open the site in Chrome on your Android phone
+2. Tap the menu (⋮) → **Install app** or tap the install banner
+3. ReadBuddy appears on your home screen like a real app!
 
 ## Deploy to GitHub Pages
-1. Push this repo to GitHub
-2. Go to **Settings → Pages**
-3. Select **main** branch, `/ (root)` folder
-4. Save — your app will be live
+1. Push to GitHub → Settings → Pages → main branch → Save
 
-## Project Structure
-```
-ReadBuddy/
-├── index.html       # Main HTML structure
-├── style.css        # Kid-friendly colorful styling
-├── app.js           # Speech recognition, TTS, reading logic, gamification
-└── README.md        # You are here
-```
-
-## 🔬 About the "AI" Part
-ReadBuddy uses the **Web Speech API** — a browser-native technology that:
-- **SpeechRecognition**: Converts the kid's spoken words to text in real-time, then checks if they match the target word/sentence
-- **SpeechSynthesis**: Reads words and sentences aloud with a kid-friendly voice
-
-No external AI APIs, no API keys, no costs — it all runs in the browser for free.
-
-## 📋 Patent Note
-AI-powered reading assistants for children exist in the market (Duolingo ABC, Homer, Reading Eggs, Speechify, etc.). The general concept of using speech recognition to help kids read is **not patentable** as a broad idea. However, a **specific unique implementation, method, or feature** that is novel and non-obvious could potentially be patentable. Consult a patent attorney for specific guidance.
+## Making a Real APK
+To create an actual `.apk` file (not just a PWA), you can use:
+- **[PWABuilder](https://www.pwabuilder.com)** — enter your URL, it generates an APK
+- **Capacitor** — `npm install @capacitor/core` and wrap the web app
+- **Cordova** — similar to Capacitor
+- The PWA approach above works on 95% of Android devices without an APK
 
 ## License
 MIT — free to use, modify, and share.

@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#6c5ce7" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ReadBuddy" />
   <title>ReadBuddy — Your AI Reading Tutor</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -30,9 +35,7 @@
 
     <!-- Main Display -->
     <div class="main-display" id="mainDisplay">
-      <!-- Big letter/word shows here -->
       <div class="big-display" id="bigDisplay"></div>
-      <!-- Emoji image -->
       <div class="emoji-display" id="emojiDisplay"></div>
     </div>
 
@@ -44,7 +47,7 @@
         <div class="ripple-circle delay2"></div>
         <div class="mic-icon">🎤</div>
       </div>
-      <p class="listening-text" id="listeningText">I'm listening...</p>
+      <p class="listening-text" id="listeningText">I'm listening... take your time!</p>
     </div>
 
     <!-- Score Bar -->
@@ -71,8 +74,37 @@
     <div class="level-info" id="levelInfo" style="display:none;">
       <span id="levelLabel">Level 1: Letters</span>
     </div>
+
+    <!-- Install hint -->
+    <div class="install-hint" id="installHint" style="display:none;">
+      📲 Tap to install ReadBuddy on your phone!
+    </div>
   </div>
 
   <script src="app.js"></script>
+  <script>
+    // Register Service Worker for PWA (offline + installable)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(function(e) {});
+    }
+
+    // PWA Install Prompt
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      var hint = document.getElementById('installHint');
+      if (hint) {
+        hint.style.display = 'block';
+        hint.addEventListener('click', function() {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(function() {
+            hint.style.display = 'none';
+            deferredPrompt = null;
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>

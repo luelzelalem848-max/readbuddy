@@ -1,9 +1,9 @@
-// ====== ReadBuddy — AI Reading Tutor (v2: Fully Interactive) ======
-// The app TALKS first, LISTENSNS automatically, and drives the lesson flow.
+// ====== ReadBuddy — AI Reading Tutor (v3: Natural & Interactive) ======
+// Longer listening, natural voice, more interaction, PWA-ready
 
 // ---- State ----
 let kidName = '';
-let currentLevel = 0; // 0=letters, 1=words, 2=sentences
+let currentLevel = 0;
 let currentIndex = 0;
 let stars = 0;
 let correctCount = 0;
@@ -11,10 +11,12 @@ let streak = 0;
 let isSpeaking = false;
 let isListening = false;
 let recognition = null;
-let listenTimeout = null;
 let noSpeechTimeout = null;
 let retryCount = 0;
 let voice = null;
+let voicesLoaded = false;
+let totalAttempts = 0;
+let currentTarget = '';
 
 // ---- Reading Content ----
 const levels = [
@@ -94,36 +96,70 @@ const levels = [
   }
 ];
 
-// ---- Praise & encouragement messages ----
+// ---- Praise & encouragement (more varied & natural) ----
 const praise = [
-  'Amazing job!',
-  'You did it! Great work!',
-  'Fantastic! You\'re so smart!',
-  'Wonderful! Keep going!',
-  'You\'re a reading star!',
-  'Perfect! That\'s correct!',
-  'Super! You\'re amazing!'
+  'Wow, you got it! That was perfect!',
+  'Yes! You read that so well!',
+  'Amazing! You\'re getting so good at this!',
+  'That\'s right! I knew you could do it!',
+  'Fantastic! You\'re a reading superstar!',
+  'Perfect! Great job!',
+  'Yay! You said it correctly! Keep going!',
+  'Brilliant! You\'re learning so fast!'
 ];
 
 const tryAgain = [
-  'Almost! Let\'s try again. Listen carefully.',
-  'Good try! Let me say it again for you.',
-  'Not quite! Listen and try once more.',
-  'You\'re getting there! Try again!'
+  'Oops, not quite! Let me help you. Listen carefully and try again.',
+  'Almost! You can do it. Let me say it one more time for you.',
+  'Good try! But let\'s try again. Listen to how I say it.',
+  'Don\'t worry! Reading is hard sometimes. Let me help you. Listen and try!'
 ];
 
 const noSpeech = [
-  'I didn\'t hear you. Let me say it again, and you try!',
-  'Oops, I couldn\'t hear you. Speak louder and try!',
-  'Say it out loud for me! Let me repeat it.'
+  'Hmm, I didn\'t hear you. Can you speak a little louder? Let me say it again.',
+  'I think it\'s too quiet! Speak up so I can hear you! Let me repeat.',
+  'Oops, I missed that! Say it out loud for me. Here, I\'ll say it again.'
 ];
+
+const midLessonChat = [
+  'You\'re doing great! Keep going!',
+  'I love how hard you\'re trying!',
+  'You\'re getting better and better!',
+  'I\'m so proud of you! Let\'s keep reading!'
+];
+
+const letterPhonetics = {
+  'a': ['a', 'ay', 'eh', 'ah'],
+  'b': ['b', 'bee', 'be'],
+  'c': ['c', 'see', 'sea'],
+  'd': ['d', 'dee', 'de'],
+  'e': ['e', 'ee'],
+  'f': ['f', 'eff', 'ef'],
+  'g': ['g', 'gee', 'je'],
+  'h': ['h', 'aitch', 'ach', 'h'],
+  'i': ['i', 'eye', 'ai'],
+  'j': ['j', 'jay', 'jay '],
+  'k': ['k', 'kay', 'kai'],
+  'l': ['l', 'ell', 'el'],
+  'm': ['m', 'em'],
+  'n': ['n', 'en'],
+  'o': ['o', 'oh', 'owe'],
+  'p': ['p', 'pee', 'pea'],
+  'q': ['q', 'cue', 'queue', 'kyu'],
+  'r': ['r', 'ar', 'are'],
+  's': ['s', 'ess', 'es'],
+  't': ['t', 'tee', 'tea'],
+  'u': ['u', 'you', 'yoo'],
+  'v': ['v', 'vee', 've'],
+  'w': ['w', 'double u', 'double you', 'double-u'],
+  'x': ['x', 'ex', 'eks'],
+  'y': ['y', 'why', 'wy'],
+  'z': ['z', 'zee', 'zed', 'ze']
+};
 
 // ====== ELEMENT HELPERS ======
 function el(id) { return document.getElementById(id); }
-
-function setStatus(text) {
-  el('avatarStatus').textContent = text;
-}
+function setStatus(t) { el('avatarStatus').textContent = t; }
 
 function setSpeech(text) {
   el('speechText').textContent = text;
@@ -143,34 +179,13 @@ function showBigDisplay(text) {
   el('bigDisplay').style.animation = 'bigPop 0.5s ease';
 }
 
-function showEmoji(emoji) {
-  el('emojiDisplay').textContent = emoji || '';
-}
-
-function showFeedback(msg, type) {
-  el('feedbackZone').innerHTML = `<div class="feedback-msg ${type}">${msg}</div>`;
-}
-
-function clearFeedback() {
-  el('feedbackZone').innerHTML = '';
-}
-
-function showListening(active) {
-  el('listeningZone').classList.toggle('active', active);
-}
-
-function showScoreBar(show) {
-  el('scoreBar').style.display = show ? 'flex' : 'none';
-}
-
-function showControls(show) {
-  el('controls').style.display = show ? 'flex' : 'none';
-}
-
-function showLevelInfo(show) {
-  el('levelInfo').style.display = show ? 'block' : 'none';
-  if (show) el('levelLabel').textContent = levels[currentLevel].label;
-}
+function showEmoji(emoji) { el('emojiDisplay').textContent = emoji || ''; }
+function showFeedback(msg, type) { el('feedbackZone').innerHTML = `<div class="feedback-msg ${type}">${msg}</div>`; }
+function clearFeedback() { el('feedbackZone').innerHTML = ''; }
+function showListening(active) { el('listeningZone').classList.toggle('active', active); }
+function showScoreBar(show) { el('scoreBar').style.display = show ? 'flex' : 'none'; }
+function showControls(show) { el('controls').style.display = show ? 'flex' : 'none'; }
+function showLevelInfo(show) { el('levelInfo').style.display = show ? 'block' : 'none'; if (show) el('levelLabel').textContent = levels[currentLevel].label; }
 
 function updateScore() {
   el('starsCount').textContent = stars;
@@ -190,57 +205,73 @@ function renderProgressDots() {
   el('progressDots').innerHTML = html;
 }
 
-// ====== TEXT TO SPEECH ======
+// ====== TEXT TO SPEECH (Natural Voice) ======
 function speak(text, callback) {
-  if (!('speechSynthesis' in window)) {
-    if (callback) callback();
-    return;
-  }
+  if (!('speechSynthesis' in window)) { if (callback) callback(); return; }
 
   window.speechSynthesis.cancel();
   isSpeaking = true;
   setAvatarState('speaking');
   setStatus('Speaking...');
 
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.rate = 0.85;
-  utter.pitch = 1.3;
-  utter.volume = 1;
+  // Split into sentences for more natural pacing
+  const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
 
-  if (voice) utter.voice = voice;
+  let chainCallback = callback;
+  let idx = 0;
 
-  utter.onend = function() {
-    isSpeaking = false;
-    setAvatarState('');
-    setStatus('');
-    if (callback) callback();
-  };
+  function speakNext() {
+    if (idx >= sentences.length) {
+      isSpeaking = false;
+      setAvatarState('');
+      setStatus('');
+      if (callback) callback();
+      return;
+    }
 
-  utter.onerror = function() {
-    isSpeaking = false;
-    setAvatarState('');
-    setStatus('');
-    if (callback) callback();
-  };
+    const sentence = sentences[idx].trim();
+    if (!sentence) { idx++; speakNext(); return; }
 
-  window.speechSynthesis.speak(utter);
+    const utter = new SpeechSynthesisUtterance(sentence);
+    // Natural settings: moderate rate, slightly higher pitch for friendliness
+    utter.rate = 0.9;
+    utter.pitch = 1.15;
+    utter.volume = 1;
+
+    if (voice) utter.voice = voice;
+
+    utter.onend = function() {
+      idx++;
+      // Small pause between sentences for natural feel
+      setTimeout(speakNext, 150);
+    };
+
+    utter.onerror = function() {
+      idx++;
+      speakNext();
+    };
+
+    window.speechSynthesis.speak(utter);
+  }
+
+  speakNext();
 }
 
-// ====== SPEECH RECOGNITION ======
+// ====== SPEECH RECOGNITION (Longer & More Robust) ======
 function initRecognition() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    return false;
-  }
+  if (!SR) return false;
 
   recognition = new SR();
   recognition.continuous = false;
   recognition.interimResults = false;
   recognition.lang = 'en-US';
-  recognition.maxAlternatives = 5;
+  recognition.maxAlternatives = 10;
 
   recognition.onresult = function(event) {
     clearTimeout(noSpeechTimeout);
+
+    // Gather many alternatives for better matching
     let alternatives = [];
     for (let i = 0; i < event.results[0].length; i++) {
       alternatives.push(event.results[0][i].transcript.toLowerCase().trim());
@@ -281,10 +312,11 @@ function startListening(timeoutSec) {
     isListening = true;
     showListening(true);
     setAvatarState('listening');
-    setStatus('Listening...');
+    setStatus('Listening... speak now!');
     recognition.start();
 
-    const timeout = (timeoutSec || 8) * 1000;
+    // MUCH longer timeout: 20 seconds default, 25 for names
+    const timeout = (timeoutSec || 20) * 1000;
     noSpeechTimeout = setTimeout(() => {
       if (isListening) {
         stopListening();
@@ -292,7 +324,11 @@ function startListening(timeoutSec) {
       }
     }, timeout);
   } catch (e) {
-    stopListening();
+    // Already running — restart
+    try { recognition.stop(); } catch(e2) {}
+    setTimeout(() => {
+      try { recognition.start(); } catch(e3) {}
+    }, 200);
   }
 }
 
@@ -307,9 +343,70 @@ function stopListening() {
   }
 }
 
+// ====== FUZZY MATCHING (Better accuracy for kids) ======
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1] : Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1;
+    }
+  }
+  return dp[m][n];
+}
+
+function similarity(a, b) {
+  const maxLen = Math.max(a.length, b.length);
+  if (maxLen === 0) return 1;
+  return 1 - levenshtein(a, b) / maxLen;
+}
+
+function checkMatch(transcript, target) {
+  const cleanT = transcript.replace(/[.,!?]/g, '').trim();
+  const cleanTarget = target.toLowerCase().replace(/[.,!?]/g, '').trim();
+
+  if (currentLevel === 0) {
+    // Letters: check phonetic alternatives too
+    const phonetics = letterPhonetics[cleanTarget] || [cleanTarget];
+    for (const ph of phonetics) {
+      if (cleanT === ph || cleanT.startsWith(ph) || cleanT.includes(ph)) return true;
+    }
+    // Also check similarity for single letters (kids might say "ay" for A)
+    if (similarity(cleanT, cleanTarget) >= 0.5) return true;
+    // Check if the full speak text matches (e.g. "A is for Apple")
+    if (cleanT.includes('apple') && cleanTarget === 'a') return true;
+    if (cleanT.includes('bear') && cleanTarget === 'b') return true;
+    if (cleanT.includes('cat') && cleanTarget === 'c') return true;
+    return false;
+  } else if (currentLevel === 1) {
+    // Words: exact, contains, or high similarity
+    if (cleanT === cleanTarget || cleanT.includes(cleanTarget)) return true;
+    if (similarity(cleanT, cleanTarget) >= 0.7) return true;
+    return false;
+  } else {
+    // Sentences: word overlap
+    const targetWords = cleanTarget.split(' ');
+    let matched = 0;
+    for (const tw of targetWords) {
+      for (const alt of [cleanT]) {
+        if (alt.includes(tw)) { matched++; break; }
+        // Fuzzy match per word
+        const words = alt.split(' ');
+        for (const w of words) {
+          if (similarity(w, tw) >= 0.7) { matched++; break; }
+        }
+      }
+    }
+    return matched / targetWords.length >= 0.6;
+  }
+}
+
 // ====== SPEECH RESULT DISPATCHER ======
 function handleSpeechResult(alternatives) {
   stopListening();
+  totalAttempts++;
   if (!kidName) {
     handleNameResult(alternatives);
   } else {
@@ -326,7 +423,7 @@ function handleNoSpeech() {
   }
 }
 
-// ====== APP FLOW: PHASE 1 — Welcome & Ask Name ======
+// ====== PHASE 1 — Welcome & Ask Name ======
 function startApp() {
   setAvatarState('thinking');
   setStatus('Getting ready...');
@@ -334,13 +431,13 @@ function startApp() {
   const savedName = localStorage.getItem('readbuddy_name');
   if (savedName) {
     kidName = savedName;
-    setSpeech(`Welcome back, ${kidName}! Ready to keep reading? Let's go!`);
-    speak(`Welcome back, ${kidName}! Ready to keep reading? Let's go!`, () => {
+    setSpeech(`Oh, hi ${kidName}! Welcome back! I missed you! Are you ready to read some more? Let's go!`);
+    speak(`Oh, hi ${kidName}! Welcome back! I missed you! Are you ready to read some more? Let's go!`, () => {
       startLesson();
     });
   } else {
-    setSpeech('Hi there! I\'m ReadBuddy, your reading friend! What\'s your name?');
-    speak('Hi there! I\'m ReadBuddy, your reading friend! What\'s your name?', () => {
+    setSpeech('Hello! I\'m ReadBuddy, your reading buddy! I\'m so happy to meet you! What is your name?');
+    speak('Hello! I\'m ReadBuddy, your reading buddy! I\'m so happy to meet you! What is your name?', () => {
       askForName();
     });
   }
@@ -348,17 +445,15 @@ function startApp() {
 
 // ====== PHASE 2 — Listen for Name ======
 function askForName() {
-  setSpeech('Tell me your name! Just say it out loud. 🎤');
+  setSpeech(`Tell me your name! Just say it out loud. Like this: My name is Sarah.`);
   setStatus('Listening for your name...');
-  setTimeout(() => {
-    startListening(10);
-  }, 500);
+  setTimeout(() => { startListening(25); }, 500);
 }
 
 function handleNameResult(alternatives) {
   let name = '';
   for (const alt of alternatives) {
-    let cleaned = alt.replace(/^(my name is|i am|i'm|my name's|name is)\s+/i, '').trim();
+    let cleaned = alt.replace(/^(my name is|i am|i'm|my name's|name is|this is|it's|its)\s+/i, '').trim();
     if (cleaned.length > 0 && cleaned.length <= 20) {
       name = cleaned;
       break;
@@ -372,8 +467,8 @@ function handleNameResult(alternatives) {
   kidName = name;
   localStorage.setItem('readbuddy_name', kidName);
 
-  setSpeech(`Nice to meet you, ${kidName}! That\'s a beautiful name! Let\'s start reading!`);
-  speak(`Nice to meet you, ${kidName}! That's a beautiful name! Let's start reading!`, () => {
+  setSpeech(`Oh, ${kidName}! What a lovely name! I love it! Okay ${kidName}, are you ready to learn to read? Let's start with the letters of the alphabet!`);
+  speak(`Oh, ${kidName}! What a lovely name! I love it! Okay ${kidName}, are you ready to learn to read? Let's start with the letters of the alphabet!`, () => {
     startLesson();
   });
 }
@@ -381,16 +476,16 @@ function handleNameResult(alternatives) {
 function handleNameNoSpeech() {
   retryCount++;
   if (retryCount >= 3) {
-    setSpeech("Hmm, I can't hear you well. Let's just start reading! You can tell me your name later.");
-    speak("Hmm, I can't hear you well. Let's just start reading! You can tell me your name later.", () => {
+    setSpeech(`Hmm, I can't hear you very well. That's okay! Let's just start reading and have fun!`);
+    speak("Hmm, I can't hear you very well. That's okay! Let's just start reading and have fun!", () => {
       kidName = 'Friend';
       localStorage.setItem('readbuddy_name', kidName);
       startLesson();
     });
     return;
   }
-  setSpeech("I didn't hear you. Say your name out loud! For example, say: My name is Luel.");
-  speak("I didn't hear you. Say your name out loud! For example, say: My name is Luel.", () => {
+  setSpeech(`I didn't quite hear you. Can you speak a little louder? Say your name like this: My name is Luel.`);
+  speak("I didn't quite hear you. Can you speak a little louder? Say your name like this: My name is Luel.", () => {
     askForName();
   });
 }
@@ -410,28 +505,38 @@ function startLesson() {
   teachCurrentItem();
 }
 
-// ====== PHASE 4 — Teach Current Letter/Word ======
+// ====== PHASE 4 — Teach Current Letter/Word (More Interactive) ======
 function teachCurrentItem() {
   const item = levels[currentLevel].items[currentIndex];
+  currentTarget = item.text;
   renderProgressDots();
 
   showBigDisplay(item.text);
   showEmoji(item.emoji);
   clearFeedback();
 
+  // Add occasional chit-chat every 5 items
+  let chat = '';
+  if (currentIndex > 0 && currentIndex % 5 === 0) {
+    chat = midLessonChat[Math.floor(Math.random() * midLessonChat.length)] + ' ';
+  }
+
   if (currentLevel === 0) {
+    const speakText = `${chat}Okay ${kidName}, let's look at this letter. This is the letter ${item.text}. ${item.speak} Now it's your turn! Can you say ${item.text}?`;
     setSpeech(`Let's learn the letter ${item.text}. ${item.speak} Now you say it!`);
-    speak(`Let's learn the letter ${item.text}. ${item.speak} Now you say it!`, () => {
+    speak(speakText, () => {
       listenForReading();
     });
   } else if (currentLevel === 1) {
+    const speakText = `${chat}Look at this word, ${kidName}. This word is "${item.text}". Can you read it? Say it out loud!`;
     setSpeech(`This word is "${item.text}". Can you read it? Say it out loud!`);
-    speak(`This word is "${item.text}". Can you read it? Say it out loud!`, () => {
+    speak(speakText, () => {
       listenForReading();
     });
   } else {
+    const speakText = `${chat}Now let's read a sentence together, ${kidName}. Read this: ${item.text}. Go ahead!`;
     setSpeech(`Read this sentence: "${item.text}"`);
-    speak(`Read this sentence: ${item.text}`, () => {
+    speak(speakText, () => {
       listenForReading();
     });
   }
@@ -439,50 +544,31 @@ function teachCurrentItem() {
 
 // ====== PHASE 5 — Listen for Kid Reading ======
 function listenForReading() {
-  setSpeech(`Your turn, ${kidName}! Say it out loud! 🎤`);
+  setSpeech(`Your turn, ${kidName}! Say it out loud! I'm listening! 🎤`);
   setStatus('Your turn! Speak now...');
-  setTimeout(() => {
-    startListening(8);
-  }, 500);
+  setTimeout(() => { startListening(20); }, 500);
 }
 
 // ====== PHASE 6 — Check Reading Result ======
 function checkReading(alternatives) {
   const item = levels[currentLevel].items[currentIndex];
-  const target = item.text.toLowerCase().replace(/[.,!?]/g, '').trim();
-
   let isCorrect = false;
-  for (const alt of alternatives) {
-    const cleanAlt = alt.replace(/[.,!?]/g, '').trim();
 
-    if (currentLevel === 0) {
-      if (cleanAlt === target || cleanAlt.startsWith(target) || cleanAlt.includes(target)) {
-        isCorrect = true; break;
-      }
-    } else if (currentLevel === 1) {
-      if (cleanAlt === target || cleanAlt.includes(target)) {
-        isCorrect = true; break;
-      }
-    } else {
-      const targetWords = target.split(' ');
-      let matched = 0;
-      for (const tw of targetWords) {
-        if (cleanAlt.includes(tw)) matched++;
-      }
-      if (matched / targetWords.length >= 0.7) {
-        isCorrect = true; break;
-      }
+  for (const alt of alternatives) {
+    if (checkMatch(alt, item.text)) {
+      isCorrect = true;
+      break;
     }
   }
 
   if (isCorrect) {
     handleCorrect();
   } else {
-    handleIncorrect();
+    handleIncorrect(alternatives);
   }
 }
 
-// ====== PHASE 7a — Correct! ======
+// ====== PHASE 7a — Correct! (More natural & celebratory) ======
 function handleCorrect() {
   stars++;
   correctCount++;
@@ -495,18 +581,27 @@ function handleCorrect() {
 
   const praiseMsg = praise[Math.floor(Math.random() * praise.length)];
   showFeedback(`✅ ${praiseMsg}`, 'correct');
-  setSpeech(`${praiseMsg} Great job, ${kidName}!`);
-  speak(praiseMsg, () => {
+
+  // More natural praise — vary the message
+  let speakMsg = praiseMsg;
+  if (streak >= 3) {
+    speakMsg = praiseMsg + ` That's ${streak} in a row! You're on fire, ${kidName}!`;
+  } else if (streak >= 5) {
+    speakMsg = `Wow, ${kidName}! ${streak} correct in a row! You're amazing!`;
+  } else {
+    speakMsg = praiseMsg + ` Good job, ${kidName}!`;
+  }
+
+  setSpeech(speakMsg);
+  speak(speakMsg, () => {
     triggerConfetti();
   });
 
-  setTimeout(() => {
-    nextItem();
-  }, 2500);
+  setTimeout(() => { nextItem(); }, 2800);
 }
 
-// ====== PHASE 7b — Incorrect ======
-function handleIncorrect() {
+// ====== PHASE 7b — Incorrect (More encouraging) ======
+function handleIncorrect(alternatives) {
   streak = 0;
   retryCount++;
   updateScore();
@@ -518,15 +613,18 @@ function handleIncorrect() {
   showFeedback(`❌ ${tryMsg}`, 'wrong');
 
   if (retryCount >= 3) {
-    setSpeech(`That's okay, ${kidName}! Let's move to the next one. You can always come back!`);
-    speak(`That's okay, ${kidName}! Let's move to the next one. You can always come back!`, () => {
+    setSpeech(`That's okay, ${kidName}! This one was tricky. Let's try the next one. You're doing great!`);
+    speak(`That's okay, ${kidName}! This one was tricky. Let's try the next one. You're doing great!`, () => {
       retryCount = 0;
       setTimeout(() => nextItem(), 500);
     });
   } else {
     const item = levels[currentLevel].items[currentIndex];
+    // Be encouraging — tell them what they said vs what's correct
+    let heardText = alternatives[0] || '';
+    let speakText = `${tryMsg} You said "${heardText}", but the correct answer is "${item.text}". Let me say it for you. ${item.speak} Now you try! Say ${item.text}!`;
     setSpeech(`${tryMsg} Listen: ${item.speak} Now you try!`);
-    speak(`${tryMsg} ${item.speak} Now you try!`, () => {
+    speak(speakText, () => {
       if (wordEl) wordEl.classList.remove('word-wrong');
       listenForReading();
     });
@@ -539,8 +637,9 @@ function handleNoSpeechReading() {
   const msg = noSpeech[Math.floor(Math.random() * noSpeech.length)];
   showFeedback('🤔 ' + msg, 'encourage');
 
+  let speakText = `${msg} Listen carefully. ${item.speak} Now it's your turn. Say ${item.text}!`;
   setSpeech(`${msg} Listen: ${item.speak} Now say it!`);
-  speak(`${msg} ${item.speak} Now say it!`, () => {
+  speak(speakText, () => {
     listenForReading();
   });
 }
@@ -562,8 +661,8 @@ function nextItem() {
     showLevelInfo(true);
     const levelName = levels[currentLevel].name;
     const prevName = levels[currentLevel - 1].name;
-    setSpeech(`Amazing, ${kidName}! You finished all the ${prevName}! Now let's try ${levelName}!`);
-    speak(`Amazing, ${kidName}! You finished all the ${prevName}! Now let's try ${levelName}!`, () => {
+    setSpeech(`Wow, ${kidName}! You did it! You finished all the ${prevName}! You're so smart! Now let's try ${levelName}. Are you ready? Here we go!`);
+    speak(`Wow, ${kidName}! You did it! You finished all the ${prevName}! You're so smart! Now let's try ${levelName}. Are you ready? Here we go!`, () => {
       teachCurrentItem();
     });
     return;
@@ -574,11 +673,11 @@ function nextItem() {
 
 // ====== PHASE 9 — All Complete ======
 function completeAllLevels() {
-  setSpeech(`Wow, ${kidName}! You did it! You finished ALL the levels! You are a SUPER READER!`);
-  speak(`Wow, ${kidName}! You did it! You finished ALL the levels! You are a SUPER READER!`, () => {
-    triggerConfetti(60);
-    setTimeout(() => triggerConfetti(60), 500);
-    setTimeout(() => triggerConfetti(60), 1000);
+  setSpeech(`Oh my goodness, ${kidName}! You did it! You finished ALL the levels! You are a SUPER READER! I am so proud of you! You should be proud of yourself too!`);
+  speak(`Oh my goodness, ${kidName}! You did it! You finished ALL the levels! You are a SUPER READER! I am so proud of you! You should be proud of yourself too!`, () => {
+    triggerConfetti(80);
+    setTimeout(() => triggerConfetti(80), 500);
+    setTimeout(() => triggerConfetti(80), 1000);
   });
   showFeedback('🎉🏆 SUPER READER! 🏆🎉', 'correct');
   el('bigDisplay').innerHTML = '🎉';
@@ -643,11 +742,33 @@ el('homeBtn').addEventListener('click', function() {
   setTimeout(startApp, 300);
 });
 
-// ====== INIT VOICES ======
+// ====== INIT VOICES (Pick the most natural voice) ======
 function loadVoices() {
   if (!('speechSynthesis' in window)) return;
   const voices = window.speechSynthesis.getVoices();
-  voice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Samantha') || v.name.includes('Female') || v.name.includes('Google US')));
+  voicesLoaded = true;
+
+  // Priority list of natural-sounding English voices
+  const preferredNames = [
+    'Google UK English Female',
+    'Google US English',
+    'Samantha',
+    'Microsoft Aria',
+    'Microsoft Jenny',
+    'Microsoft Zira',
+    'Karen',
+    'Moira',
+    'Tessa',
+    'Fiona'
+  ];
+
+  for (const name of preferredNames) {
+    voice = voices.find(v => v.name.includes(name));
+    if (voice) return;
+  }
+
+  // Fallback: any female English voice
+  voice = voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female'));
   if (!voice) voice = voices.find(v => v.lang.startsWith('en'));
 }
 
