@@ -1,0 +1,432 @@
+/* ====== ReadBuddy — Kid-Friendly Reading App ====== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #6c5ce7;
+  --primary-light: #a29bfe;
+  --secondary: #fd79a8;
+  --bg: #ffeaa7;
+  --card-bg: #ffffff;
+  --text: #2d3436;
+  --text-muted: #636e72;
+  --success: #00b894;
+  --danger: #e17055;
+  --warning: #fdcb6e;
+  --shadow: 0 8px 32px rgba(108, 92, 231, 0.15);
+  --radius: 20px;
+}
+
+body {
+  font-family: 'Comic Neue', 'Fredoka', system-ui, sans-serif;
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 50%, #fd79a8 100%);
+  min-height: 100vh;
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+.app {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+/* ====== Header ====== */
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.5);
+}
+
+.tagline {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-top: 4px;
+}
+
+.level-badge {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 12px;
+  box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+}
+
+/* ====== Setup Section ====== */
+.setup-section {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 40px 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.setup-section h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.setup-section input {
+  width: 100%;
+  max-width: 300px;
+  padding: 14px 18px;
+  font-size: 1.2rem;
+  font-family: 'Comic Neue', sans-serif;
+  border: 3px solid var(--primary-light);
+  border-radius: 14px;
+  text-align: center;
+  outline: none;
+  margin-bottom: 20px;
+}
+
+.setup-section input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+}
+
+/* ====== Buttons ====== */
+.btn-big {
+  border: none;
+  border-radius: 16px;
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'Fredoka', sans-serif;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.btn-big:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.btn-big:active {
+  transform: translateY(0);
+}
+
+.btn-start { background: var(--primary); color: white; }
+.btn-speak { background: var(--secondary); color: white; }
+.btn-listen { background: var(--success); color: white; }
+.btn-next { background: var(--primary-light); color: white; }
+
+/* ====== Level Selector ====== */
+.level-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-level {
+  background: white;
+  border: 3px solid transparent;
+  border-radius: 14px;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Fredoka', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text);
+}
+
+.btn-level.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: white;
+}
+
+.btn-level:hover:not(.active) {
+  border-color: var(--primary-light);
+  background: rgba(162, 155, 254, 0.15);
+}
+
+/* ====== Scoreboard ====== */
+.scoreboard {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.score-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-width: 80px;
+}
+
+.score-emoji { font-size: 1.5rem; }
+.score-value { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+.score-label { font-size: 0.75rem; color: var(--text-muted); }
+
+/* ====== Reading Card ====== */
+.reading-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  text-align: center;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-prompt {
+  margin-bottom: 12px;
+}
+
+.instruction {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.word-display {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 20px 0;
+}
+
+.big-word {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 5rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-shadow: 2px 2px 0 rgba(108, 92, 231, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.big-word:hover {
+  transform: scale(1.1);
+}
+
+.big-word.speaking {
+  animation: bounce 0.6s ease infinite;
+  color: var(--secondary);
+}
+
+.sentence-word {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-block;
+}
+
+.sentence-word.highlighted {
+  color: var(--secondary);
+  transform: scale(1.2);
+  text-decoration: underline;
+}
+
+.sentence-word.speaking {
+  animation: bounce 0.6s ease infinite;
+}
+
+/* ====== Word Image ====== */
+.word-image {
+  font-size: 3rem;
+  margin: 8px 0;
+}
+
+/* ====== Action Buttons Row ====== */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+/* ====== Listening Indicator ====== */
+.listening-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
+  padding: 16px;
+}
+
+.pulse-ring {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--success);
+  margin-bottom: 10px;
+  animation: pulse 1.2s ease infinite;
+}
+
+.listening-indicator p {
+  color: var(--success);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* ====== Feedback ====== */
+.feedback {
+  margin-top: 16px;
+  min-height: 30px;
+}
+
+.feedback.success {
+  color: var(--success);
+  font-weight: 700;
+  font-size: 1.3rem;
+  animation: popIn 0.4s ease;
+}
+
+.feedback.error {
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.feedback.hint {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ====== Progress ====== */
+.progress-section {
+  margin-bottom: 16px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 10px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ====== Encouragement ====== */
+.encouragement {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.encouragement p {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary);
+  animation: popIn 0.5s ease;
+}
+
+/* ====== Footer ====== */
+.footer {
+  text-align: center;
+  margin-top: 24px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.footer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ====== Animations ====== */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.5); transform: scale(1); }
+  50% { box-shadow: 0 0 0 15px rgba(0, 184, 148, 0); transform: scale(1.1); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 184, 148, 0); transform: scale(1); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes celebrate {
+  0% { transform: scale(0) rotate(0deg); }
+  50% { transform: scale(1.2) rotate(180deg); }
+  100% { transform: scale(1) rotate(360deg); }
+}
+
+.celebrate {
+  animation: celebrate 0.8s ease;
+}
+
+/* ====== Confetti ====== */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 600px) {
+  .header h1 { font-size: 2rem; }
+  .big-word { font-size: 3.5rem; }
+  .sentence-word { font-size: 1.5rem; }
+  .action-buttons { flex-direction: column; }
+  .btn-big { width: 100%; }
+  .scoreboard { gap: 8px; }
+  .score-item { padding: 8px 12px; min-width: 60px; }
+}

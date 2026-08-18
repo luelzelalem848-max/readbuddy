@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReadBuddy — AI Reading Companion for Kids</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <h1>📚 ReadBuddy</h1>
+      <p class="tagline">Your AI reading buddy — listen, read, and learn! 🎉</p>
+      <div class="level-badge" id="levelBadge">Level 1: Letters</div>
+    </header>
+
+    <!-- Kid Setup -->
+    <section class="setup-section" id="setupSection">
+      <h2>👋 Hi there! What's your name?</h2>
+      <input type="text" id="kidName" placeholder="Type your name here!" maxlength="20" />
+      <button id="startBtn" class="btn-big btn-start">Let's Start Reading! 🚀</button>
+    </section>
+
+    <!-- Main Reading App (hidden until setup) -->
+    <div class="reading-app" id="readingApp" style="display:none;">
+
+      <!-- Level Selector -->
+      <section class="level-selector">
+        <button class="btn-level active" data-level="letters">🔤 Letters</button>
+        <button class="btn-level" data-level="words">📖 Words</button>
+        <button class="btn-level" data-level="sentences">📝 Sentences</button>
+        <button class="btn-level" data-level="stories">⭐ Stories</button>
+      </section>
+
+      <!-- Score Board -->
+      <section class="scoreboard">
+        <div class="score-item">
+          <span class="score-emoji">🌟</span>
+          <span class="score-value" id="starsCount">0</span>
+          <span class="score-label">Stars</span>
+        </div>
+        <div class="score-item">
+          <span class="score-emoji">✅</span>
+          <span class="score-value" id="correctCount">0</span>
+          <span class="score-label">Correct</span>
+        </div>
+        <div class="score-item">
+          <span class="score-emoji">🔥</span>
+          <span class="score-value" id="streakCount">0</span>
+          <span class="score-label">Streak</span>
+        </div>
+      </section>
+
+      <!-- Reading Card -->
+      <section class="reading-card" id="readingCard">
+        <div class="card-prompt" id="cardPrompt">
+          <p class="instruction" id="instruction">👇 Click the button to hear the word, then read it out loud!</p>
+        </div>
+
+        <div class="word-display" id="wordDisplay">
+          <span class="big-word">A</span>
+        </div>
+
+        <div class="word-image" id="wordImage"></div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button id="speakBtn" class="btn-big btn-speak" title="Read it to me">
+            🔊 Read to Me
+          </button>
+          <button id="listenBtn" class="btn-big btn-listen" title="I'll read it!">
+            🎤 I'll Read It!
+          </button>
+          <button id="nextBtn" class="btn-big btn-next" title="Next word">
+            ➡️ Next
+          </button>
+        </div>
+
+        <!-- Listening Indicator -->
+        <div class="listening-indicator" id="listeningIndicator" style="display:none;">
+          <div class="pulse-ring"></div>
+          <p>👂 I'm listening... Read it out loud!</p>
+        </div>
+
+        <!-- Feedback -->
+        <div class="feedback" id="feedback"></div>
+      </section>
+
+      <!-- Progress -->
+      <section class="progress-section">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <p class="progress-text" id="progressText">0 words completed</p>
+      </section>
+
+      <!-- Encouragement -->
+      <div class="encouragement" id="encouragement"></div>
+    </div>
+
+    <footer class="footer">
+      <p>Made with 💙 for kids learning to read — <a href="https://github.com/luelzelalem848-max" target="_blank">View on GitHub</a></p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
