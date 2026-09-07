@@ -159,6 +159,11 @@ const letterPhonetics = {
 
 // ====== ELEMENT HELPERS ======
 function el(id) { return document.getElementById(id); }
+function escapeHtml(value) {
+  return String(value).replace(/[&<>\"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;'
+  }[char]));
+}
 function setStatus(t) { el('avatarStatus').textContent = t; }
 
 function setSpeech(text) {
@@ -173,14 +178,14 @@ function setAvatarState(state) {
 }
 
 function showBigDisplay(text) {
-  el('bigDisplay').innerHTML = `<span class="highlight-word">${text}</span>`;
+  el('bigDisplay').innerHTML = `<span class="highlight-word">${escapeHtml(text)}</span>`;
   el('bigDisplay').style.animation = 'none';
   void el('bigDisplay').offsetHeight;
   el('bigDisplay').style.animation = 'bigPop 0.5s ease';
 }
 
 function showEmoji(emoji) { el('emojiDisplay').textContent = emoji || ''; }
-function showFeedback(msg, type) { el('feedbackZone').innerHTML = `<div class="feedback-msg ${type}">${msg}</div>`; }
+function showFeedback(msg, type) { el('feedbackZone').innerHTML = `<div class="feedback-msg ${escapeHtml(type)}">${escapeHtml(msg)}</div>`;
 function clearFeedback() { el('feedbackZone').innerHTML = ''; }
 function showListening(active) { el('listeningZone').classList.toggle('active', active); }
 function showScoreBar(show) { el('scoreBar').style.display = show ? 'flex' : 'none'; }
