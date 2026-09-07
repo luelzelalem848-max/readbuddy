@@ -185,7 +185,7 @@ function showBigDisplay(text) {
 }
 
 function showEmoji(emoji) { el('emojiDisplay').textContent = emoji || ''; }
-function showFeedback(msg, type) { el('feedbackZone').innerHTML = `<div class="feedback-msg ${escapeHtml(type)}">${escapeHtml(msg)}</div>`;
+function showFeedback(msg, type) { el('feedbackZone').innerHTML = `<div class="feedback-msg ${escapeHtml(type)}">${escapeHtml(msg)}</div>`; }
 function clearFeedback() { el('feedbackZone').innerHTML = ''; }
 function showListening(active) { el('listeningZone').classList.toggle('active', active); }
 function showScoreBar(show) { el('scoreBar').style.display = show ? 'flex' : 'none'; }
