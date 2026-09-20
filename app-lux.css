@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap');
+
+/* ====== READBUDDY LUXURY MAGICAL — tutor screen overhaul ====== */
+body, .app { font-family: 'Baloo 2', 'Fredoka', sans-serif; }
+
+/* glass panels */
+.main-display, .speech-bubble, .feedback-zone, .level-info, .controls, .install-hint {
+  background: linear-gradient(160deg, rgba(52,40,100,.66), rgba(28,20,58,.55)) !important;
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  border: 1px solid rgba(255,255,255,.14) !important;
+  border-radius: 26px !important;
+  box-shadow: 0 22px 55px rgba(0,0,0,.45), 0 0 40px rgba(162,155,254,.16), inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+
+/* speech bubble */
+.speech-bubble {
+  border-radius: 24px !important;
+  position: relative;
+}
+.speech-bubble::after {
+  content: '';
+  position: absolute; inset: -1px;
+  border-radius: 25px;
+  padding: 1.5px;
+  background: conic-gradient(from var(--fx-ang, 0deg), transparent 0%, transparent 20%, #a29bfe 38%, #ffe08a 50%, #fd79a6 62%, transparent 80%, transparent 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask-composite: exclude;
+  animation: rb-halo 5s linear infinite;
+  pointer-events: none;
+  opacity: .8;
+}
+@keyframes rb-halo { to { --fx-ang: 360deg; } }
+
+/* mic zone — magical glow */
+.listening-zone {
+  border-radius: 50% !important;
+  background: radial-gradient(circle, rgba(162,155,254,.28), transparent 70%) !important;
+  border: none !important;
+  box-shadow: 0 0 60px rgba(162,155,254,.45) !important;
+}
+.mic-icon { filter: drop-shadow(0 0 14px rgba(255,224,138,.8)); }
+.ripple-circle { border-color: rgba(162,155,254,.5) !important; }
+
+/* score chips — candy gradient */
+.score-chip {
+  background: linear-gradient(135deg, #a29bfe, #fd79a6) !important;
+  border: none !important;
+  border-radius: 999px !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 8px 22px rgba(162,155,254,.5), inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
+.score-bar { background: rgba(255,255,255,.14) !important; border-radius: 999px; overflow: hidden; }
+
+/* buttons — chunky candy */
+.btn-control {
+  background: linear-gradient(135deg, #a29bfe, #fd79a6) !important;
+  background-size: 160% auto;
+  border: none !important;
+  border-radius: 18px !important;
+  color: #fff !important;
+  font-family: 'Baloo 2', sans-serif !important;
+  font-weight: 700 !important;
+  box-shadow: 0 12px 30px rgba(162,155,254,.5), inset 0 1px 0 rgba(255,255,255,.3) !important;
+  transition: transform .25s, box-shadow .25s, background-position .35s !important;
+}
+.btn-control:hover { transform: translateY(-3px) scale(1.03); background-position: 100% center; }
+.btn-control:active { transform: scale(.97); }
+
+/* emoji + big display */
+.emoji-display { filter: drop-shadow(0 0 18px rgba(255,224,138,.6)); }
+.big-display { text-shadow: 0 0 30px rgba(162,155,254,.5); }
+.big-display, .listening-text { letter-spacing: .5px; }
+
+/* progress dots */
+.progress-dots span { background: rgba(255,255,255,.2); transition: all .3s; }
+.progress-dots span.on { background: #ffe08a; box-shadow: 0 0 12px rgba(255,224,138,.8); transform: scale(1.25); }
+
+/* entrance */
+.main-display, .speech-bubble, .controls, .listening-zone { animation: rb-in .7s cubic-bezier(.2,.8,.3,1.2) both; }
+.speech-bubble { animation-delay: .12s; }
+.controls { animation-delay: .2s; }
+@keyframes rb-in { from { opacity: 0; transform: translateY(24px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .main-display, .speech-bubble, .controls, .listening-zone, .speech-bubble::after { animation: none; } }

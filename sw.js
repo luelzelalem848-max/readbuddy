@@ -1,6 +1,6 @@
 // ReadBuddy Service Worker — enables offline use & installability (PWA)
-const CACHE_NAME = 'readbuddy-v6';
-const ASSETS = ['./', './index.html', './app.html', './style.css', './app.js', './manifest.json', './bg.css', './assets/bg.png', './ultra.css', './ultra.js', './login.css', './login.js', './landing-v2.css', './scene3d.js'];
+const CACHE_NAME = 'readbuddy-v7';
+const ASSETS = ['./', './index.html', './app.html', './style.css', './app.js', './manifest.json', './bg.css', './assets/bg.png', './ultra.css', './ultra.js', './login.css', './login.js', './landing-v2.css', './scene3d.js', './app-lux.css'];
 
 self.addEventListener('install', function(e) {
   e.waitUntil(
