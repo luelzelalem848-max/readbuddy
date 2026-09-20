@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#6c5ce7" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ReadBuddy" />
+  <title>ReadBuddy — Your AI Reading Tutor</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="ultra.css" />
+  <link rel="stylesheet" href="login.css" />
+  <link rel="stylesheet" href="bg.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="fx-bg" aria-hidden="true">
+  <div class="fx-bg-img"></div>
+  <div class="fx-bg-overlay"></div>
+  <div class="fx-bg-glow"></div>
+  <div class="fx-bg-particles">
+    <span style="--x:6%;--d:26s;--del:-3s;--s:1.1">⭐</span>
+    <span style="--x:17%;--d:31s;--del:-11s;--s:0.8">✨</span>
+    <span style="--x:28%;--d:24s;--del:-7s;--s:1.3">📚</span>
+    <span style="--x:39%;--d:35s;--del:-19s;--s:0.7">🔤</span>
+    <span style="--x:50%;--d:28s;--del:-14s;--s:1.0">💫</span>
+    <span style="--x:61%;--d:33s;--del:-5s;--s:1.2">⭐</span>
+    <span style="--x:72%;--d:27s;--del:-21s;--s:0.85">✨</span>
+    <span style="--x:83%;--d:30s;--del:-9s;--s:1.0">📚</span>
+    <span style="--x:91%;--d:36s;--del:-16s;--s:0.9">🔤</span>
+    <span style="--x:11%;--d:38s;--del:-24s;--s:0.7">💫</span>
+    <span style="--x:45%;--d:40s;--del:-30s;--s:0.75">⭐</span>
+    <span style="--x:67%;--d:42s;--del:-27s;--s:0.65">✨</span>
+  </div>
+</div>
+
+  <div class="app">
+    <!-- AI Avatar -->
+    <div class="avatar-area">
+      <div class="avatar" id="avatar">
+        <div class="avatar-face" id="avatarFace">
+          <div class="avatar-eyes">
+            <div class="eye" id="leftEye"></div>
+            <div class="eye" id="rightEye"></div>
+          </div>
+          <div class="avatar-mouth" id="avatarMouth"></div>
+        </div>
+      </div>
+      <div class="avatar-status" id="avatarStatus">Starting up...</div>
+    </div>
+
+    <!-- Speech Bubble -->
+    <div class="speech-bubble" id="speechBubble">
+      <p id="speechText">Loading...</p>
+    </div>
+
+    <!-- Main Display -->
+    <div class="main-display" id="mainDisplay">
+      <div class="big-display" id="bigDisplay"></div>
+      <div class="emoji-display" id="emojiDisplay"></div>
+    </div>
+
+    <!-- Listening Indicator -->
+    <div class="listening-zone" id="listeningZone">
+      <div class="mic-ripple">
+        <div class="ripple-circle"></div>
+        <div class="ripple-circle delay1"></div>
+        <div class="ripple-circle delay2"></div>
+        <div class="mic-icon">🎤</div>
+      </div>
+      <p class="listening-text" id="listeningText">I'm listening... take your time!</p>
+    </div>
+
+    <!-- Score Bar -->
+    <div class="score-bar" id="scoreBar" style="display:none;">
+      <div class="score-chip">⭐ <span id="starsCount">0</span></div>
+      <div class="score-chip">✅ <span id="correctCount">0</span></div>
+      <div class="score-chip">🔥 <span id="streakCount">0</span></div>
+    </div>
+
+    <!-- Progress Dots -->
+    <div class="progress-dots" id="progressDots" style="display:none;"></div>
+
+    <!-- Feedback -->
+    <div class="feedback-zone" id="feedbackZone"></div>
+
+    <!-- Controls -->
+    <div class="controls" id="controls" style="display:none;">
+      <button id="repeatBtn" class="btn-control">🔊 Repeat</button>
+      <button id="skipBtn" class="btn-control">⏭️ Skip</button>
+      <button id="homeBtn" class="btn-control">🏠 Home</button>
+    </div>
+
+    <!-- Level Info -->
+    <div class="level-info" id="levelInfo" style="display:none;">
+      <span id="levelLabel">Level 1: Letters</span>
+    </div>
+
+    <!-- Install hint -->
+    <div class="install-hint" id="installHint" style="display:none;">
+      📲 Tap to install ReadBuddy on your phone!
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Register Service Worker for PWA (offline + installable)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(function(e) {});
+    }
+
+    // PWA Install Prompt
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      var hint = document.getElementById('installHint');
+      if (hint) {
+        hint.style.display = 'block';
+        hint.addEventListener('click', function() {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(function() {
+            hint.style.display = 'none';
+            deferredPrompt = null;
+          });
+        });
+      }
+    });
+  </script>
+<script src="login.js"></script>
+<script src="ultra.js"></script>
+</body>
+</html>
