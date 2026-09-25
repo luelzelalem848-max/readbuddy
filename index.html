@@ -19,20 +19,21 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#features">Features</a></li>
       <li><a href="#stats">Why ReadBuddy</a></li>
-      <li><a href="login.html" class="nav-cta">Launch App 🚀</a></li>
+      <li><a href="login.html" class="nav-cta">Launch App</a></li>
     </ul>
     <button class="nav-burger" id="burger" aria-label="Menu">☰</button>
   </nav>
 
   <header class="hero3d">
-    <canvas id="scene3d"></canvas>
+    <video class="fx-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true"><source src="assets/bg-video.mp4" type="video/mp4"></video>
+<canvas id="scene3d"></canvas>
     <div class="hero-inner">
       <span class="hero-badge rv">✨ Reading made magical</span>
       <h1 class="hero-title rv" data-d="1">Read aloud with<br /><span class="stroke">your AI buddy.</span></h1>
       <p class="hero-sub rv" data-d="2">ReadBuddy listens as kids read out loud, celebrates every word, and turns practice into a star-collecting adventure — even offline.</p>
       <div class="hero-ctas rv" data-d="3">
-        <a href="login.html" class="btn-primary">Launch App 🚀</a>
-        <a href="https://github.com/luelzelalem848-max/readbuddy" target="_blank" rel="noopener" class="btn-ghost">View on GitHub 🐙</a>
+        <a href="login.html" class="btn-primary">Launch App</a>
+        <a href="https://github.com/luelzelalem848-max/readbuddy" target="_blank" rel="noopener" class="btn-ghost">View on GitHub</a>
       </div>
     </div>
     <div class="scroll-hint">⌄</div>
@@ -44,32 +45,32 @@
     <p class="section-sub rv" data-d="2">Voice-powered lessons, instant encouragement and rewards that make kids want one more page.</p>
     <div class="bento">
       <div class="bento-card stat-card b-wide rv" data-d="1">
-  <div class="b-icon">🎤</div>
+  <div class="b-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg></div>
   <h3>Voice tutor</h3>
   <p>ReadBuddy actually listens to every word — and cheers the good ones.</p>
 </div>
       <div class="bento-card stat-card  rv" data-d="2">
-  <div class="b-icon">🔤</div>
+  <div class="b-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v14H7a2 2 0 0 0-2 2V4z"/><path d="M5 20a2 2 0 0 1 2-2h12"/></svg></div>
   <h3>Phonics levels</h3>
   <p>Letters, words and sentences in a gentle step-by-step journey.</p>
 </div>
       <div class="bento-card stat-card b-tall rv" data-d="3">
-  <div class="b-icon">⭐</div>
+  <div class="b-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.8-4.5 4.2 1.1 6-5.3-3-5.3 3 1.1-6L3.3 9.4l6.1-.8L12 3z"/></svg></div>
   <h3>Stars & streaks</h3>
   <p>Collect stars for every win and keep the streak alive.</p>
 </div>
       <div class="bento-card stat-card  rv" data-d="4">
-  <div class="b-icon">🗣️</div>
+  <div class="b-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v10H9l-5 4V5z"/><path d="M8 9h8"/><path d="M8 12h5"/></svg></div>
   <h3>Gentle feedback</h3>
   <p>Kind corrections that build confidence, not pressure.</p>
 </div>
       <div class="bento-card stat-card b-wide rv" data-d="5">
-  <div class="b-icon">📴</div>
+  <div class="b-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
   <h3>Works offline</h3>
   <p>Install it like an app — read anywhere, even without internet.</p>
 </div>
       <div class="bento-card stat-card  rv" data-d="1">
-  <div class="b-icon">🌙</div>
+  <div class="b-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13A8 8 0 0 1 11 4a8 8 0 1 0 9 9z"/></svg></div>
   <h3>Magical design</h3>
   <p>A night-sky world of floating books that kids love.</p>
 </div>
@@ -100,7 +101,7 @@
     <p>Built by <a href="https://github.com/luelzelalem848-max/readbuddy" target="_blank" rel="noopener">Luel Zelalem</a> · 2026 · Free & open source</p>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="vendor/three.min.js"></script>
   <script src="scene3d.js"></script>
   <script src="ultra.js"></script>
   <script>

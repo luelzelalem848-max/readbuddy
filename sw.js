@@ -1,6 +1,6 @@
 // ReadBuddy Service Worker — enables offline use & installability (PWA)
-const CACHE_NAME = 'readbuddy-v10';
-const ASSETS = ['./', './index.html', './app.html', './style.css', './app.js', './manifest.json', './bg.css', './assets/bg.png', './ultra.css', './ultra.js', './login.css', './login.js', './landing-v2.css', './scene3d.js', './app-lux.css', './fx-pack.css', './fx-pack.js', './app3d.js', './kinetic.js', './login.html', './login-screen.css'];
+const CACHE_NAME = 'readbuddy-v11';
+const ASSETS = ['./', './index.html', './app.html', './style.css', './app.js', './manifest.json', './bg.css', './assets/bg.png', './ultra.css', './ultra.js', './login.css', './login.js', './landing-v2.css', './scene3d.js', './app-lux.css', './fx-pack.css', './fx-pack.js', './app3d.js', './kinetic.js', './login.html', './login-screen.css', './vendor/three.min.js', './assets/bg-video.mp4'];
 
 self.addEventListener('install', function(e) {
   e.waitUntil(
