@@ -10,7 +10,7 @@ body, .app { font-family: 'Baloo 2', 'Fredoka', sans-serif; }
   -webkit-backdrop-filter: blur(18px) saturate(1.3);
   border: 1px solid rgba(255,255,255,.14) !important;
   border-radius: 26px !important;
-  box-shadow: 0 22px 55px rgba(0,0,0,.45), 0 0 40px rgba(162,155,254,.16), inset 0 1px 0 rgba(255,255,255,.12) !important;
+  box-shadow: 0 22px 55px rgba(0,0,0,.45), 0 0 40px rgba(139,92,246,.16), inset 0 1px 0 rgba(255,255,255,.12) !important;
 }
 
 /* speech bubble */
@@ -23,7 +23,7 @@ body, .app { font-family: 'Baloo 2', 'Fredoka', sans-serif; }
   position: absolute; inset: -1px;
   border-radius: 25px;
   padding: 1.5px;
-  background: conic-gradient(from var(--fx-ang, 0deg), transparent 0%, transparent 20%, #a29bfe 38%, #ffe08a 50%, #fd79a6 62%, transparent 80%, transparent 100%);
+  background: conic-gradient(from var(--fx-ang, 0deg), transparent 0%, transparent 20%, #8b5cf6 38%, #ffe08a 50%, #f472b6 62%, transparent 80%, transparent 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
           mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -37,34 +37,34 @@ body, .app { font-family: 'Baloo 2', 'Fredoka', sans-serif; }
 /* mic zone — magical glow */
 .listening-zone {
   border-radius: 50% !important;
-  background: radial-gradient(circle, rgba(162,155,254,.28), transparent 70%) !important;
+  background: radial-gradient(circle, rgba(139,92,246,.28), transparent 70%) !important;
   border: none !important;
-  box-shadow: 0 0 60px rgba(162,155,254,.45) !important;
+  box-shadow: 0 0 60px rgba(139,92,246,.45) !important;
 }
 .mic-icon { filter: drop-shadow(0 0 14px rgba(255,224,138,.8)); }
-.ripple-circle { border-color: rgba(162,155,254,.5) !important; }
+.ripple-circle { border-color: rgba(139,92,246,.5) !important; }
 
 /* score chips — candy gradient */
 .score-chip {
-  background: linear-gradient(135deg, #a29bfe, #fd79a6) !important;
+  background: linear-gradient(135deg, #8b5cf6, #f472b6) !important;
   border: none !important;
   border-radius: 999px !important;
   color: #fff !important;
   font-weight: 700 !important;
-  box-shadow: 0 8px 22px rgba(162,155,254,.5), inset 0 1px 0 rgba(255,255,255,.3) !important;
+  box-shadow: 0 8px 22px rgba(139,92,246,.5), inset 0 1px 0 rgba(255,255,255,.3) !important;
 }
 .score-bar { background: rgba(255,255,255,.14) !important; border-radius: 999px; overflow: hidden; }
 
 /* buttons — chunky candy */
 .btn-control {
-  background: linear-gradient(135deg, #a29bfe, #fd79a6) !important;
+  background: linear-gradient(135deg, #8b5cf6, #f472b6) !important;
   background-size: 160% auto;
   border: none !important;
   border-radius: 18px !important;
   color: #fff !important;
   font-family: 'Baloo 2', sans-serif !important;
   font-weight: 700 !important;
-  box-shadow: 0 12px 30px rgba(162,155,254,.5), inset 0 1px 0 rgba(255,255,255,.3) !important;
+  box-shadow: 0 12px 30px rgba(139,92,246,.5), inset 0 1px 0 rgba(255,255,255,.3) !important;
   transition: transform .25s, box-shadow .25s, background-position .35s !important;
 }
 .btn-control:hover { transform: translateY(-3px) scale(1.03); background-position: 100% center; }
@@ -72,7 +72,7 @@ body, .app { font-family: 'Baloo 2', 'Fredoka', sans-serif; }
 
 /* emoji + big display */
 .emoji-display { filter: drop-shadow(0 0 18px rgba(255,224,138,.6)); }
-.big-display { text-shadow: 0 0 30px rgba(162,155,254,.5); }
+.big-display { text-shadow: 0 0 30px rgba(139,92,246,.5); }
 .big-display, .listening-text { letter-spacing: .5px; }
 
 /* progress dots */

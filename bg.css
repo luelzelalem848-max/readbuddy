@@ -38,7 +38,7 @@ body { background: transparent !important; }
 .fx-bg-glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 80% 20%, rgba(162,155,254,0.20) 0%, transparent 55%),radial-gradient(ellipse at 15% 80%, rgba(253,121,168,0.16) 0%, transparent 55%);
+  background: radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.20) 0%, transparent 55%),radial-gradient(ellipse at 15% 80%, rgba(253,121,168,0.16) 0%, transparent 55%);
   animation: fx-glow-r 16s ease-in-out infinite alternate;
   mix-blend-mode: screen;
 }
